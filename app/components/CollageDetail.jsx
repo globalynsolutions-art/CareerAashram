@@ -61,25 +61,6 @@ console.log(collegeId)
     switch (activeTab) {
       case 'overview':
         return (
-          <HelmetProvider>
-  <Seo
-    title={`Career Aashram | ${collegeData?.name || 'College'}`}
-    description={
-      collegeData?.about?.description ||
-      `Explore ${collegeData?.name || 'this college'} — one of India’s top institutions offering quality education, modern facilities, and excellent placement opportunities.`
-    }
-    keywords={`${collegeData?.name || 'College'}, ${collegeData?.location || 'India'}, ${collegeData?.type || 'Education'}, top colleges, admission, fees, placements, ${collegeData?.name || 'college'} courses, best colleges in India`}
-    classification={`${collegeData?.type || 'Education'}, College Admission, Career Guidance`}
-    ogTitle={`Career Aashram | ${collegeData?.name || 'College'}`}
-    ogDescription={`Learn about ${collegeData?.name || 'this college'} — including courses, admission process, fees, placements, and campus facilities.`}
-    ogImage={collegeData?.image || "https://careeraashram.com/default-college-banner.jpg"}
-    ogUrl={`https://careeraashram.com/college/${collegeData?.slug || 'college'}`}
-    twitterTitle={`${collegeData?.name || 'College'} - Courses, Admission, Fees & Placement | Career Aashram`}
-    twitterDescription={`Discover ${collegeData?.name || 'this college'} at Career Aashram — explore programs, placements, and admission process.`}
-    twitterImage={collegeData?.image || "https://careeraashram.com/default-college-banner.jpg"}
-  />
-
-
           <div className="space-y-6 lg:space-y-12">
             <section className="py-6 lg:py-12">
               <div className="text-center mb-6 lg:mb-12">
@@ -140,7 +121,7 @@ console.log(collegeId)
               </div>
             </section>
           </div>
-          </HelmetProvider>
+         
         );
 
       case 'fees':

@@ -782,23 +782,7 @@ const CourseDetailPage = () => {
   };
 
   return (
-    <HelmetProvider>
-      <Seo
-    title={`Career Aashram | ${courseData?.name || 'Course Details'}`}
-    description={
-      courseData?.overview?.description ||
-      `Explore ${courseData?.name || 'this course'} — learn about syllabus, eligibility, top colleges, admission process, and career opportunities at Career Aashram.`
-    }
-    keywords={`${courseData?.name || 'course'}, ${courseData?.field || 'education'}, ${courseData?.duration || 'degree'}, top colleges offering ${courseData?.shortName || 'course'}, admission process, syllabus, career options, ${courseData?.name || 'course'} details, Career Aashram`}
-    classification={`${courseData?.field || 'Education'}, Courses, Career Guidance`}
-    ogTitle={`Career Aashram | ${courseData?.name || 'Course Details'}`}
-    ogDescription={`Discover ${courseData?.name || 'this course'} — check syllabus, eligibility, duration, top colleges, and career scope at Career Aashram.`}
-    ogImage={courseData?.image || "https://careeraashram.com/default-course-banner.jpg"}
-    ogUrl={`https://careeraashram.com/course/${courseData?.slug || 'course'}`}
-    twitterTitle={`${courseData?.name || 'Course'} - Syllabus, Admission, Duration & Colleges | Career Aashram`}
-    twitterDescription={`Find details about ${courseData?.name || 'this course'} — including syllabus, top colleges, and career options on Career Aashram.`}
-    twitterImage={courseData?.image || "https://careeraashram.com/default-course-banner.jpg"}
-  />
+   
     <div className="min-h-screen bg-gray-50">
       <CourseHeader />
       <TabNavigation />
@@ -834,7 +818,7 @@ const CourseDetailPage = () => {
         </div>
       </div>
     </div>
-    </HelmetProvider>
+ 
   );
 };
 

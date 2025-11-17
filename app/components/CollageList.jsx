@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios
 import { useParams, usePathname } from "next/navigation";
-
+import Link from "next/link";
 import {
   ChevronDown,
   Search,
@@ -158,7 +158,7 @@ const CourseListingPage = () => {
             Current URL: {location.pathname}
           </p>
           <Link
-            to="/"
+            href="/"
             className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Return to Homepage
@@ -193,7 +193,7 @@ const CourseListingPage = () => {
           <h2 className="text-2xl font-bold text-red-600">Error</h2>
           <p className="text-gray-600">{error}</p>
           <Link
-            to="/"
+            href="/"
             className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Return to Homepage
@@ -205,25 +205,6 @@ const CourseListingPage = () => {
 
   return (
     <>
-
-      <Seo
-        title={`Career Aashram | Top Colleges ${
-          filterType === "city"
-            ? `in ${formattedDisplayId}`
-            : `for ${formattedDisplayId.toUpperCase()}`
-        } - Find Best Colleges in India`}
-        description={`Explore the best colleges ${
-          filterType === "city"
-            ? `in ${formattedDisplayId}`
-            : `offering ${formattedDisplayId.toUpperCase()} courses`
-        } at Career Aashram. Compare fees, ratings, admission details, and apply online easily.`}
-        keywords={`colleges ${
-          filterType === "city"
-            ? `in ${formattedDisplayId}`
-            : `for ${formattedDisplayId}`
-        }, top colleges in India, best colleges for ${formattedDisplayId}, college admissions, courses after 12th, higher education, online counseling`}
-        classification="Education, College Search, Career Guidance"
-      />
 
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white shadow-sm border-b">
