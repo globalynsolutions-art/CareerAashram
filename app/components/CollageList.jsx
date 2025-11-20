@@ -15,7 +15,9 @@ import Link from "next/link";
 
 
 const CourseListingPage = () => {
-  const { id, courseId } = useParams(); // Handle both id (city) and courseId from URL
+ const params = useParams();
+const id = params.id;           // for cities: /cities/delhi → id = "delhi"
+const courseId = params.courseId || params.id;  // CRITICAL FIX
   const location = usePathname();
   const [colleges, setColleges] = useState([]);
   const [filteredColleges, setFilteredColleges] = useState([]);
