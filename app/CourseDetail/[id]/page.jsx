@@ -1,7 +1,11 @@
-import CourseDetailPage from '@/app/components/CourseDetail';
-import { notFound } from 'next/navigation';
 
+import CourseDetailPage from '@/app/components/CourseDetail'
+import React from 'react'
 
-export default function Page(){
-  <CourseDetailPage />
+const page = () => {
+  return (
+   <CourseDetailPage />
+  )
 }
+
+export default page
