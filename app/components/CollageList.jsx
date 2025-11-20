@@ -12,7 +12,6 @@ import {
   BookOpen,
 } from "lucide-react";
 
-import Seo from "./Seo";
 
 const CourseListingPage = () => {
   const { id, courseId } = useParams(); // Handle both id (city) and courseId from URL
@@ -45,73 +44,60 @@ const CourseListingPage = () => {
 
   // Fetch colleges
   useEffect(() => {
-    const fetchColleges = async () => {
-      // Determine filterType synchronously to avoid premature fetches
-      let filterType = null;
-      if (id && cityIds.includes(id.toLowerCase())) {
-        filterType = "city";
-      } else if (courseId) {
-        filterType = "course";
+  const fetchColleges = async () => {
+    // Always get fresh params
+    const params = useParams();
+    const currentId = params.id;
+    const currentCourseId = params.courseId;
+
+    console.log("Params:", { currentId, currentCourseId });
+
+    let filterType = null;
+    let filterValue = null;
+
+    if (currentId && cityIds.includes(currentId.toLowerCase())) {
+      filterType = "city";
+      filterValue = currentId.toLowerCase(); // normalize
+    } else if (currentCourseId) {
+      filterType = "course";
+      filterValue = currentCourseId.toUpperCase(); // <--- VERY IMPORTANT!
+    }
+
+    if (!filterType || !filterValue) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://careeraashram-backend.onrender.com";
+
+      const endpoint = filterType === "city"
+        ? `${baseUrl}/api/colleges/by-city/${filterValue}`
+        : `${baseUrl}/api/courses/by-course/${filterValue}`; // e.g., MBA
+
+      console.log("Fetching:", endpoint);
+
+      const response = await axios.get(endpoint, { timeout: 10000 });
+
+      if (!response.data.success || !response.data.data?.colleges) {
+        throw new Error("Invalid response structure");
       }
 
-      // Skip fetch if no valid filterType or id/courseId
-      if (!filterType || (!id && !courseId)) {
-        console.log("No valid filterType, id, or courseId, skipping fetch", {
-          id,
-          courseId,
-          filterType,
-        });
-        setIsLoading(false);
-        setColleges([]);
-        setFilteredColleges([]);
-        return;
-      }
+      setColleges(response.data.data.colleges);
+      setFilteredColleges(response.data.data.colleges);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError("No colleges found for this course/city");
+      setColleges([]);
+      setFilteredColleges([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      setIsLoading(true);
-      setError(null);
-      try {
-        const baseUrl =
-          process.env.NEXT_PUBLIC_API_URL ||
-          "https://careeraashram-backend.onrender.com";
-        const endpoint =
-          filterType === "city"
-            ? `${baseUrl}/api/colleges/by-city/${id}`
-            : `${baseUrl}/api/courses/by-course/${courseId}`;
-        console.log("Fetching from:", endpoint);
-        const response = await axios.get(endpoint, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 10000,
-          withCredentials: true,
-        });
-        console.log("Fetched colleges data:", response.data);
-        if (!response.data.success || !response.data.data?.colleges) {
-          throw new Error("Invalid API response: Missing required fields");
-        }
-        const collegesData = response.data.data.colleges || [];
-        setColleges(collegesData);
-        setFilteredColleges(collegesData);
-      } catch (error) {
-        console.error(
-          `Error fetching colleges for ${filterType} with id ${
-            id || courseId
-          }:`,
-          error
-        );
-        setError(
-          error.response?.status === 404
-            ? "No colleges found"
-            : `Failed to load colleges: ${error.message}`
-        );
-        setColleges([]);
-        setFilteredColleges([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchColleges();
-  }, [id, courseId]);
+  fetchColleges();
+}, [location.pathname]); // Depend on pathname instead — most reliable
 
   // Filter colleges based on search term and selected state
   useEffect(() => {
