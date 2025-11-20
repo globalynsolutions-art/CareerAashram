@@ -1,9 +1,8 @@
-import React from 'react'
 import CollegeDetail from '@/app/components/CollageDetail'
-const page = () => {
+import React from 'react'
+
+export default function page () {
   return (
     <CollegeDetail />
   )
 }
-
-export default page
