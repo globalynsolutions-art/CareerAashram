@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios
-import { useParams, useLocation } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import {
   ChevronDown,
   Search,
@@ -16,7 +16,7 @@ import Link from "next/link";
 
 const CourseListingPage = () => {
   const { id, courseId } = useParams(); // Handle both id (city) and courseId from URL
-  const location = useLocation();
+  const location = usePathname();
   const [colleges, setColleges] = useState([]);
   const [filteredColleges, setFilteredColleges] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,7 +71,7 @@ const CourseListingPage = () => {
       setError(null);
       try {
         const baseUrl =
-          import.meta.env.VITE_API_URL ||
+          process.env.NEXT_PUBLIC_API_URL ||
           "https://careeraashram-backend.onrender.com";
         const endpoint =
           filterType === "city"
@@ -158,7 +158,7 @@ const CourseListingPage = () => {
             Current URL: {location.pathname}
           </p>
           <Link
-            to="/"
+            href="/"
             className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Return to Homepage
@@ -193,7 +193,7 @@ const CourseListingPage = () => {
           <h2 className="text-2xl font-bold text-red-600">Error</h2>
           <p className="text-gray-600">{error}</p>
           <Link
-            to="/"
+            href="/"
             className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Return to Homepage
@@ -204,25 +204,6 @@ const CourseListingPage = () => {
   }
 
   return (
-    <HelmetProvider>
-      <Seo
-        title={`Career Aashram | Top Colleges ${
-          filterType === "city"
-            ? `in ${formattedDisplayId}`
-            : `for ${formattedDisplayId.toUpperCase()}`
-        } - Find Best Colleges in India`}
-        description={`Explore the best colleges ${
-          filterType === "city"
-            ? `in ${formattedDisplayId}`
-            : `offering ${formattedDisplayId.toUpperCase()} courses`
-        } at Career Aashram. Compare fees, ratings, admission details, and apply online easily.`}
-        keywords={`colleges ${
-          filterType === "city"
-            ? `in ${formattedDisplayId}`
-            : `for ${formattedDisplayId}`
-        }, top colleges in India, best colleges for ${formattedDisplayId}, college admissions, courses after 12th, higher education, online counseling`}
-        classification="Education, College Search, Career Guidance"
-      />
 
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white shadow-sm border-b">
@@ -402,7 +383,7 @@ const CourseListingPage = () => {
                                 Apply Now
                               </button>
                             </a>
-                            <Link to={`/colleges/detail/${college.id}`}>
+                            <Link href={`/colleges/detail/${college.id}`}>
                               <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                                 View Details
                               </button>
@@ -446,7 +427,7 @@ const CourseListingPage = () => {
           </div>
         </div>
       </div>
-    </HelmetProvider>
+  
   );
 };
 
