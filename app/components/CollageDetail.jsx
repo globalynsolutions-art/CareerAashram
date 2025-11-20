@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, Menu, X, Calendar, Users, BookOpen, Award, ChevronRight, Star, Globe, Facebook, Twitter, Instagram, Youtube, Linkedin, IndianRupee, ExternalLink, CheckCircle, GraduationCap, Building, Trophy, Camera } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
-import Seo from './Seo';
+
 
 const CollegeDetail = ({  }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
