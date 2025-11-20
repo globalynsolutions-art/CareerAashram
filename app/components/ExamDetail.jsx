@@ -7,7 +7,8 @@ import {
   GraduationCap, Target, Award, HelpCircle, Star,
   ChevronDown, ChevronUp, Search, Filter
 } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 const ExamDetailsPage = () => {
   const { id } = useParams(); // Get exam id from URL
