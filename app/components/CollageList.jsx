@@ -11,7 +11,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import Link from "next/link";
-import { HelmetProvider } from "react-helmet-async";
+
 
 
 const CourseListingPage = () => {
