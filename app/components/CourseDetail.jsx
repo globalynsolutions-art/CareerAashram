@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
-  Clock, TrendingUp, MapPin, Star, Download, Share2, Heart,
+  Clock, TrendingUp, MapPin, Star, Download, Share2, Heart,HelpCircle,
   ChevronRight, ChevronDown, Calendar, BookOpen, Users,
   Award, Building, Phone, Mail, Globe, Filter, Search,
   CheckCircle, AlertCircle, ArrowRight, ExternalLink,
@@ -10,9 +10,6 @@ import {
   Briefcase, CreditCard, FileText, HelpCircledescription, MessageCircle
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
-
-
-import Seo from './Seo';
 
 const CourseDetailPage = () => {
   const [courseData, setCourseData] = useState(null);
