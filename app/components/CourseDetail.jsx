@@ -10,6 +10,7 @@ import {
   Briefcase, CreditCard, FileText, HelpCircledescription, MessageCircle
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 const CourseDetailPage = () => {
   const [courseData, setCourseData] = useState(null);
