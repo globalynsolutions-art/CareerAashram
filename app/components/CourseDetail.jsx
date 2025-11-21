@@ -31,7 +31,7 @@ const CourseDetailPage = () => {
         setLoading(true);
         setError(null);
 
-        console.log('Fetching data for courseId:', id);
+     
         const response = await axios.get(`${API_BASE_URL}/api/courses/detail/${id}`, {
           headers: {
             'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const CourseDetailPage = () => {
           timeout: 10000, // 10-second timeout
         });
 
-        console.log('API response:', response.data);
+        
 
         // Validate response data
         if (!response.data || !response.data.title || !response.data.description) {
