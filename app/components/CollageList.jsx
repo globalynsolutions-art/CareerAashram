@@ -87,7 +87,7 @@ const courseId = params.courseId || params.id;  // CRITICAL FIX
           timeout: 10000,
           withCredentials: true,
         });
-        console.log("Fetched colleges data:", response.data);
+    
         if (!response.data.success || !response.data.data?.colleges) {
           throw new Error("Invalid API response: Missing required fields");
         }
