@@ -2,11 +2,6 @@
 import CourseDetailPage from '@/app/components/CourseDetail'
 import React from 'react'
 
-
-
-export default function Page({ params }) {
-  return <CourseDetailPage params={params} />;
-}
 export async function generateMetadata({ params }) {
   const { id } = params;
 
@@ -32,4 +27,8 @@ console.log(data.name)
       description: "View college details",
     };
   }
+}
+
+export default function Page({ params }) {
+  return <CourseDetailPage params={params} />;
 }
