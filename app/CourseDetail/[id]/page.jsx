@@ -10,7 +10,7 @@ export async function generateMetadata({ params }) {
       `https://careeraashram-backend.onrender.com/api/courses/detail/${id}`
     );
     const data = await res.json();
-
+console.log(data.name)
     return {
       title: `${data.name} - College Details`,
       description: data?.about?.description?.slice(0, 150) || "College information",
