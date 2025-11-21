@@ -12,7 +12,7 @@ export async function generateMetadata({ params }) {
     );
 
     const data = await res.json();
-
+console.log(data.name)
     // If API doesn't return name or description, provide fallback
     return {
       title: data?.name ? `${data.name} | College Details` : "College Details",
