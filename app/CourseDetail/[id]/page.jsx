@@ -8,34 +8,36 @@ export async function generateMetadata({ params }) {
   try {
     const res = await fetch(
       `https://careeraashram-backend.onrender.com/api/colleges/detail/${id}`,
-      { cache: "no-store" }  // important
+      {
+        cache: "no-store",
+        next: { revalidate: 0 }
+      }
     );
 
     const data = await res.json();
-console.log(data.name)
-    // If API doesn't return name or description, provide fallback
+
     return {
-      title: data?.name ? `${data.name} | College Details` : "College Details",
+      title: data?.name || "College Details",
       description:
         data?.about?.description?.slice(0, 150) ||
-        "Read detailed information about the college.",
-      keywords:
-        data?.about?.keywords?.join(", ") || "college, admission, fees",
+        "Detailed information about the college.",
       openGraph: {
         title: data?.name || "College Details",
         description:
           data?.about?.description ||
-          "Detailed college information and admissions.",
-        images: data?.images?.length ? data.images : [],
+          "Detailed information about the college.",
+        images: data?.images?.length ? data.images : []
       },
     };
-  } catch (error) {
+  } catch (e) {
     return {
       title: "College Details",
-      description: "Read detailed information about the college.",
+      description: "Detailed information about the college."
     };
   }
 }
+
+import CollegeDetail from "./CollegeDetail";
 
 export default function Page({ params }) {
   return <CourseDetailPage params={params} />;
