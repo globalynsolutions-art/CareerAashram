@@ -65,7 +65,7 @@ const CourseDetailPage = () => {
   // Log courseData when it updates
   useEffect(() => {
     if (courseData) {
-      console.log('Updated courseData:', courseData);
+      
     }
   }, [courseData]);
 
