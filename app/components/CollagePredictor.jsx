@@ -35,7 +35,7 @@ function CollagePredictor() {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       
       const rawText = await response.text(); // Get raw text first for logging
-      console.log('Raw API response text:', rawText); // DEBUG: Log raw response
+   
       
       let data;
       try {
@@ -44,7 +44,7 @@ function CollagePredictor() {
         throw new Error(`Failed to parse JSON: ${parseErr.message}. Raw response: ${rawText.substring(0, 200)}...`);
       }
       
-      console.log('Parsed API response data:', data); // DEBUG: Log parsed data
+     
       
       // Handle common response shapes: direct array, or wrapped like { exams: [...] } or { data: [...] }
       let examArray = [];
@@ -52,39 +52,35 @@ function CollagePredictor() {
         examArray = data;
       } else if (data && Array.isArray(data.exams)) {
         examArray = data.exams;
-        console.log('Using nested "exams" array from response'); // DEBUG
+      
       } else if (data && Array.isArray(data.data)) {
         examArray = data.data;
-        console.log('Using nested "data" array from response'); // DEBUG
+
       } else {
         throw new Error(`Invalid response format: expected an array of exams (or {exams: [...] }). Got: ${typeof data} - ${JSON.stringify(data).substring(0, 200)}...`);
       }
       
       if (examArray.length === 0) {
-        console.warn('Empty exams array received'); // DEBUG: Warn if empty
+        
       }
       
       // Enhanced debugging: Log structure of first exam
       if (examArray.length > 0) {
         const firstExam = examArray[0];
-        console.log('First exam structure:', {
-          key: firstExam.key,
-          name: firstExam.name,
-          _id: firstExam._id
-        });
+        
       }
       
-      console.log('Full exams loaded:', examArray.length); // DEBUG
+    
       
       setFullExams(examArray);
       if (examArray.length > 0) {
         // Prefer 'key' for activeTab (slug), fallback _id.toString()
         const defaultKey = examArray[0].key || (examArray[0]._id ? examArray[0]._id.toString() : '');
         setActiveTab(defaultKey);
-        console.log('Default activeTab set to:', defaultKey); // DEBUG
+      
       }
     } catch (err) {
-      console.error('Error fetching exams:', err); // For debugging
+ 
       setError(err.message);
     } finally {
       setLoading(false);
@@ -92,7 +88,7 @@ function CollagePredictor() {
   };
 
   const handlePredict = async () => {
-    console.log('Predict called with activeTab:', activeTab); // DEBUG: Log to check value
+   
     
     // Validate activeTab before proceeding
     if (!activeTab) {
@@ -126,7 +122,7 @@ function CollagePredictor() {
       }
       setResults(data);
     } catch (err) {
-      console.error('Error predicting colleges:', err); // For debugging
+
       setError(err.message);
     } finally {
       setLoading(false);
