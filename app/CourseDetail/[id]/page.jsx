@@ -43,5 +43,6 @@ export async function generateMetadata({ params }) {
 }
 
 export default function Page({ params }) {
+  console.log(params)
   return <CourseDetailPage params={params} />;
 }
