@@ -1,4 +1,6 @@
 
+
+
 import CourseDetailPage from '@/app/components/CourseDetail'
 import React from 'react'
 
@@ -7,24 +9,35 @@ export async function generateMetadata({ params }) {
 
   try {
     const res = await fetch(
-      `https://careeraashram-backend.onrender.com/api/courses/detail/${id}`
+      `https://careeraashram-backend.onrender.com/api/courses/detail/${id}`,
+      { cache: "no-store" }
     );
+
     const data = await res.json();
-console.log(data.name)
+    console.log("API RESPONSE:", data);
+
+    // most APIs wrap data inside data.data
+    const course = data?.data || data;
+
     return {
-      title: `${data.name} - College Details`,
-      description: data?.about?.description?.slice(0, 150) || "College information",
-      keywords: data?.about?.keywords?.join(", ") || "college, admission, fees",
+      title: course?.name || "Course Details",
+      description:
+        course?.about?.description?.slice(0, 150) ||
+        course?.description?.slice(0, 150) ||
+        "Course information",
+      keywords:
+        course?.about?.keywords?.join(", ") || "courses, education, career",
       openGraph: {
-        title: `${data.name} - College Details`,
-        description: data?.about?.description,
-        images: data?.images || [],
+        title: course?.name || "Course Details",
+        description:
+          course?.about?.description || course?.description,
+        images: course?.images || [],
       },
     };
   } catch (error) {
     return {
-      title: "College Details",
-      description: "View college details",
+      title: "Course Details",
+      description: "View course details",
     };
   }
 }
