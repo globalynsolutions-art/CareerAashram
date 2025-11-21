@@ -7,24 +7,32 @@ export async function generateMetadata({ params }) {
 
   try {
     const res = await fetch(
-      `https://careeraashram-backend.onrender.com/api/colleges/detail/${id}`
+      `https://careeraashram-backend.onrender.com/api/colleges/detail/${id}`,
+      { cache: "no-store" }  // important
     );
+
     const data = await res.json();
 
+    // If API doesn't return name or description, provide fallback
     return {
-      title: `${data.name} - College Details`,
-      description: data?.about?.description?.slice(0, 150) || "College information",
-      keywords: data?.about?.keywords?.join(", ") || "college, admission, fees",
+      title: data?.name ? `${data.name} | College Details` : "College Details",
+      description:
+        data?.about?.description?.slice(0, 150) ||
+        "Read detailed information about the college.",
+      keywords:
+        data?.about?.keywords?.join(", ") || "college, admission, fees",
       openGraph: {
-        title: `${data.name} - College Details`,
-        description: data?.about?.description,
-        images: data?.images || [],
+        title: data?.name || "College Details",
+        description:
+          data?.about?.description ||
+          "Detailed college information and admissions.",
+        images: data?.images?.length ? data.images : [],
       },
     };
   } catch (error) {
     return {
       title: "College Details",
-      description: "View college details",
+      description: "Read detailed information about the college.",
     };
   }
 }
