@@ -41,8 +41,7 @@ const courseId = params.courseId || params.id;  // CRITICAL FIX
 
   // Debug URL and params
   useEffect(() => {
-    console.log("Current URL:", location.pathname);
-    console.log("useParams result:", { id, courseId });
+   
   }, [id, courseId, location]);
 
   // Fetch colleges
@@ -79,7 +78,7 @@ const courseId = params.courseId || params.id;  // CRITICAL FIX
           filterType === "city"
             ? `${baseUrl}/api/colleges/by-city/${id}`
             : `${baseUrl}/api/courses/by-course/${courseId}`;
-        console.log("Fetching from:", endpoint);
+      
         const response = await axios.get(endpoint, {
           headers: {
             "Content-Type": "application/json",
@@ -146,7 +145,7 @@ const courseId = params.courseId || params.id;  // CRITICAL FIX
 
   // Display error message for invalid URL (no id or courseId)
   if (!id && !courseId) {
-    console.log("ID and courseId are undefined, rendering error message");
+    
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
