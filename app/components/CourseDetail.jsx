@@ -12,7 +12,7 @@ import {
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
-const CourseDetailPage = ({ params }) => {
+const CourseDetailPage = ({ id }) => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
