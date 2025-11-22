@@ -20,7 +20,7 @@ const CourseDetailPage = ({ params }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-const params =useParams();
+ params =useParams();
   const { id } = params;
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
