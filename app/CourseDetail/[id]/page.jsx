@@ -3,13 +3,8 @@
 import CourseDetailPage from '@/app/components/CourseDetail';
 
 export default function Page({ params }) {
-  return (
-  <>
-  <h1>{params}</h1>
-  
-
-  </>
-  );
+  console.log(params)
+  return (<CourseDetailPage params={params} /> );
 }
 
 export async function generateMetadata({ params }) {
