@@ -6,7 +6,7 @@ export default function Page({ params }) {
   return (
   <>
   <h1>{params}</h1>
-  <CourseDetailPage params={params} /> 
+  
 
   </>
   );
