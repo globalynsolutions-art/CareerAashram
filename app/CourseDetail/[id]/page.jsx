@@ -3,11 +3,18 @@
 import CourseDetailPage from '@/app/components/CourseDetail';
 
 export default function Page({ params }) {
-  return <CourseDetailPage params={params} />;
+  return (
+  <>
+  <h1>{params}</h1>
+  <CourseDetailPage params={params} /> 
+
+  </>
+  );
 }
 
 export async function generateMetadata({ params }) {
   const { id } = params;
+
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 console.log(id)
   try {
