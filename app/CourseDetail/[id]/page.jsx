@@ -1,5 +1,7 @@
 
 
+import { generateMetadata } from "./generateMetadata";
+export { generateMetadata };
 
 import CourseDetailPage from '@/app/components/CourseDetail'
 import React from 'react'
