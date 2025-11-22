@@ -1,49 +1,40 @@
 // app/CollegeDetails/[id]/page.js
 
 import CourseDetailPage from '@/app/components/CourseDetail';
-import React from 'react';
 
-// Move generateMetadata here directly
+export default function Page({ params }) {
+  return <CourseDetailPage params={params} />;
+}
+
 export async function generateMetadata({ params }) {
   const { id } = params;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 
   try {
-    const res = await fetch(
-      `https://careeraashram-backend.onrender.com/api/courses/detail/${id}`,
-      { 
-        cache: "no-store",
-        // Or use next: { revalidate: 60 } if you want ISR
-      }
-    );
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    if (!res.ok) {
-      return {
-        title: "Course Not Found | Career Aashram",
-        description: "The requested course could not be found.",
-      };
-    }
+    const res = await fetch(`${API_BASE_URL}/api/courses/detail/${id}`, {
+      signal: controller.signal,
+      cache: 'no-store',
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) return { title: "Course Not Found | Career Aashram" };
 
     const course = await res.json();
 
     return {
-      title: `${course.courseName} - Career Aashram`,
-      description: course.courseDescription?.slice(0, 160) || "Learn more about this course at Career Aashram",
+      title: `${course.title || course.courseName} - Career Aashram`,
+      description: (course.description || course.courseDescription || "").slice(0, 160),
       openGraph: {
-        title: course.courseName,
-        description: course.courseDescription || "Course details",
-        images: course.courseImage ? [{ url: course.courseImage }] : [],
+        title: course.title || course.courseName,
+        description: course.description || "",
+        images: course.image ? [{ url: course.image }] : [],
       },
     };
-  } catch (error) {
-    console.error("Metadata fetch failed:", error);
-    return {
-      title: "Course Not Found | Career Aashram",
-      description: "This course does not exist or is temporarily unavailable.",
-    };
+  } catch {
+    return { title: "Loading Course... | Career Aashram" };
   }
-}
-
-export default function Page({ params }) {
-  console.log(params);
-  return <CourseDetailPage params={params} />;
 }
