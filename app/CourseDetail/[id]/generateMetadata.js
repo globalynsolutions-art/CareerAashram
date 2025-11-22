@@ -14,8 +14,7 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    const data = await res.json();
-    const course = data.data;
+    const course = await res.json(); // DIRECT RESPONSE, not data.data
 
     return {
       title: `${course.courseName} - Career Aashram`,
