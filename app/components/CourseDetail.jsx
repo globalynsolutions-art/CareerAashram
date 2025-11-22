@@ -12,7 +12,7 @@ import {
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
-const CourseDetailPage = () => {
+const CourseDetailPage = ({ params }) => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,8 +20,9 @@ const CourseDetailPage = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+const params =useParams();
+  const { id } = params;
 
-  const { id } = useParams();
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 
   // Fetch course data from API
@@ -820,4 +821,4 @@ const CourseDetailPage = () => {
   );
 };
 
-export default CourseDetailPage({ params });
+export default CourseDetailPage();
