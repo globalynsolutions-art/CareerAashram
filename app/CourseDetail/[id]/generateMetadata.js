@@ -1,5 +1,5 @@
 export async function generateMetadata({ params }) {
-  const { id } = params; // id = “bca”
+  const { id } = params;
 
   try {
     const res = await fetch(
@@ -7,32 +7,25 @@ export async function generateMetadata({ params }) {
       { cache: "no-store" }
     );
 
-    const data = await res.json();
-
-    // Check the correct key based on your API
-    const course = data?.data;
-
-    if (!course) {
+    if (!res.ok) {
       return {
-        title: "Course Not Found | Career Aashram",
-        description: "No course information found",
+        title: "Course Not Found",
+        description: "This course does not exist",
       };
     }
 
+    const data = await res.json();
+    const course = data.data;
+
     return {
-      title: `${course.name} - Course Details | Career Aashram`,
-      description: course?.short_description || "Course information",
-      openGraph: {
-        title: `${course.name} - Course Details | Career Aashram`,
-        description: course?.short_description || "",
-        url: `https://careeraashram.com/course/${id}`,
-        type: "article",
-      },
+      title: `${course.courseName} - Career Aashram`,
+      description: course.courseDescription || "Course details page",
     };
+
   } catch (error) {
     return {
       title: "Course Not Found",
-      description: "Failed to load course data",
+      description: "This course does not exist",
     };
   }
 }
