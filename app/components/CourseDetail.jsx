@@ -7,7 +7,7 @@ import {
   Bookmark, BarChart3, GraduationCap, Target, Briefcase, MessageCircle
 } from 'lucide-react';
 
-export default async function CourseDetailPage({ params }) {
+export default async function CourseDetail({ params }) {
   const { id } = params;
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 
