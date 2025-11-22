@@ -21,7 +21,7 @@ console.log(id)
 
     clearTimeout(timeoutId);
 
-    if (!res.ok) return { title: "Course Not Found | Career Aashram" };
+    if (!res.ok) return { title: "Course Detail | Career Aashram" };
 
     const course = await res.json();
 
