@@ -1,47 +1,19 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import {
-  Clock, TrendingUp, MapPin, Star, Share2, Heart, HelpCircle,
+"use client";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { 
+  Clock, TrendingUp, MapPin, Star, Share2, Heart,HelpCircle,
   ChevronRight, ChevronDown, Calendar, BookOpen, Users,
-  Award, Building, Phone, CheckCircle, ArrowRight, ExternalLink,
-  Bookmark, BarChart3, GraduationCap, Target, Briefcase, MessageCircle
+  Award, Building, Phone,
+  CheckCircle,  ArrowRight, ExternalLink,
+  Bookmark, BarChart3, GraduationCap, Target,
+  Briefcase, MessageCircle
 } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
-export default async function CourseDetailPage({ params }) {
-  const { id } = params;
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
-
-  let courseData = null;
-
-  try {
-    // Give Render up to 25 seconds to wake up (free tier needs it)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000);
-
-    const res = await fetch(`${API_BASE_URL}/api/courses/detail/${id}`, {
-      signal: controller.signal,
-      cache: 'no-store',
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      if (res.status === 404) notFound();
-      throw new Error(`HTTP ${res.status}`);
-    }
-
-    courseData = await res.json();
-
-    // Final safety check
-    if (!courseData?.title) {
-      notFound();
-    }
-
-  } catch (err) {
-    console.error('Failed to fetch course:', err);
-    notFound(); // This triggers Next.js clean 404 page
-  }
- 
+const CourseDetailPage = ({ params }) => {
+  const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -49,10 +21,42 @@ export default async function CourseDetailPage({ params }) {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
- 
-  
+  const { id } = useParams();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 
+  // Fetch course data from API
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
+     
+        const response = await axios.get(`${API_BASE_URL}/api/courses/detail/${id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000, // 10-second timeout
+        });
+
+        
+
+        // Validate response data
+        if (!response.data || !response.data.title || !response.data.description) {
+          throw new Error('Invalid API response: Missing required fields');
+        }
+
+        setCourseData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+        setError(error.response?.status === 404 ? 'Course not found' : `Failed to load course data: ${error.message}`);
+        setLoading(false);
+      }
+    };
+
+    fetchCourseData();
+  }, [id]);
 
   useEffect(() => {
       window.scrollTo({ top: 0, behavior: "instant" });
@@ -815,3 +819,5 @@ export default async function CourseDetailPage({ params }) {
  
   );
 };
+
+export default CourseDetailPage;
