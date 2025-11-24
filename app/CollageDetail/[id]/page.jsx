@@ -7,7 +7,7 @@ export default function Page({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { id } = await params; // <-- remove await
+  const { id } = await params; 
   console.log("Generate Metadata ID:", id);
 
   const API_BASE_URL =
