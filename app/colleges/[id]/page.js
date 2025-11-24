@@ -7,7 +7,7 @@ export default function Page({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { courseId } = params;
+  const { courseId } = await params;
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 console.log(id)
