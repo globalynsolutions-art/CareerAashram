@@ -1,6 +1,7 @@
 import React from 'react'
 import CollegeDetail from '@/app/components/CollageDetail'
 
+
 export default function Page({ params }) {
   console.log(params)
   return (<CollegeDetail params={params} /> );
