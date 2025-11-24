@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 
 
 
-const CollegeDetail = ({  }) => {
+const CollegeDetail = ({ params }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [collegeData, setCollegeData] = useState(null);
