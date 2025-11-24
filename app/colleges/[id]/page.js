@@ -7,7 +7,7 @@ export default function Page({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { courseId } = await params;
+  const { id } = await params;
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
 console.log(id)
@@ -15,7 +15,7 @@ console.log(id)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const res = await fetch(`${API_BASE_URL}/api/courses/by-course/${courseId}`, {
+    const res = await fetch(`${API_BASE_URL}/api/courses/by-course/${id}`, {
       signal: controller.signal,
       cache: 'no-store',
     });
