@@ -2,30 +2,16 @@ import ExamDetailsPage from '@/app/components/ExamDetail'
 import React from 'react'
 
 export async function generateMetadata({ params }) {
-  try {
-    const res = await fetch(
-      `https://careeraashram-backend.onrender.com/api/exam/detail/${params.id}`,
-      { cache: "no-store" }
-    );
 
-    const exam = (await res.json())?.data;
-    if (!exam) return { title: "Exam Not Found" };
+  const {id} = params
 
     return {
-      title: `${exam.examInfo?.name} — Exam Details`,
-      description: exam?.overview?.slice(0, 150) || "Complete exam information",
-      keywords: [exam.examInfo?.name, "exam", "entrance"].join(", "),
+      title: ` ${id} Exam 2025: Dates, Pattern, Syllabus & Free PYQ PDFs`,
+      description:`Preparing for ${id} 2025? Get official dates, pattern, cut-offs, mock tests & free previous year papers - everything updated for you. `,
+      keywords: [id, "exam", "entrance"].join(", "),
 
-      openGraph: {
-        title: `${exam.examInfo?.name} — Exam Details`,
-        description: exam?.overview,
-        url: `${BASE_URL}/ExamDetail/${params.id}`,
-        type: "article",
-      },
+
     };
-  } catch (err) {
-    return { title: "Exam Details" };
-  }
 }
 
 const page = () => {

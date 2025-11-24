@@ -12,33 +12,11 @@ export default function Page({ params }) {
 export async function generateMetadata({ params }) {
   const { id } = await params;
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://careeraashram-backend.onrender.com';
-console.log(id)
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const res = await fetch(`${API_BASE_URL}/api/colleges/by-city/${id}`, {
-      signal: controller.signal,
-      cache: 'no-store',
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!res.ok) return { title: "Collage Detail | Career Aashram" };
-
-    const course = await res.json();
 
     return {
-      title: `${course.title || course.courseName} - Career Aashram`,
-      description: (course.description || course.courseDescription || "").slice(0, 160),
-      openGraph: {
-        title: course.title || course.courseName,
-        description: course.description || "",
-        images: course.image ? [{ url: course.image }] : [],
-      },
+      title: `List of Colleges in ${id} 2025  - Career Aashram`,
+      description: (`“List of best colleges in ${id} for 2025 based on national rankings. Get details on top engineering, arts, commerce & medical institutions.`|| "").slice(0, 160)
     };
-  } catch {
-    return { title: "Loading Course... | Career Aashram" };
-  }
+  
 }
