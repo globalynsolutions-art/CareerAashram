@@ -7,7 +7,7 @@ export default function Page({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { collegeId } = params;
+  const { collegeId } =  await params;
 
   console.log("College ID:", collegeId);
 
