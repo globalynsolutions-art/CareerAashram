@@ -37,6 +37,6 @@ console.log(id)
       },
     };
   } catch {
-    return { title: "Loading Course... | Career Aashram" };
+    return { title: "Loading College... | Career Aashram" };
   }
 }
