@@ -29,7 +29,7 @@ console.log(id)
 
     return {
       title: `${course.title || course.courseName} - Career Aashram`,
-      description: (course.description || course.courseDescription || "").slice(0, 160),
+      description: (`Know complete details on ${course.courseName} Admission Process 2024,ranking, courses, fees,placements, latest News. Also Download Brochures and Question Papers` || "").slice(0, 160),
       openGraph: {
         title: course.title || course.courseName,
         description: course.description || "",
