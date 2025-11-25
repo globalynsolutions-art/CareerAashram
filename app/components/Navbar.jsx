@@ -691,7 +691,7 @@ const SearchOverlay = ({ isOpen, onClose }) => {
                         result.category === "course"
                           ? `/CourseDetail/${result.slug}`
                           : result.category === "college"
-                          ? `/colleges/detail/${result.slug}`
+                          ? `/CollageDetail/${result.slug}`
                           : `/exams/${result.slug}`
                       }
                       onClick={onClose}
@@ -766,7 +766,7 @@ const SearchOverlay = ({ isOpen, onClose }) => {
                       key={index}
                       href={
                         search.category === "college"
-                          ? `/colleges/detail/${search.slug}`
+                          ? `/CollageDetail/${search.slug}`
                           : search.category === "exam"
                           ? `/exams/${search.slug}`
                           : `/CourseDetail/${search.slug}`
