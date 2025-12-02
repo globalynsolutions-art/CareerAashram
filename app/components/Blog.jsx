@@ -1,17 +1,34 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Search, Calendar, User, ArrowRight, BookOpen, TrendingUp, Users, Award } from 'lucide-react';
-import Link from 'next/link';
-import { apiClient } from '../services/api';  // Import your API client
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Calendar,
+  User,
+  ArrowRight,
+  BookOpen,
+  TrendingUp,
+  Users,
+  Award,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { apiClient } from "../services/api"; // Import your API client
 
 const BlogPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [blogPosts, setBlogPosts] = useState([]);  // State for fetched posts
-  const [loading, setLoading] = useState(true);  // Loading state
-  const [error, setError] = useState(null);  // Error state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [blogPosts, setBlogPosts] = useState([]); // State for fetched posts
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
-  const categories = ["all", "CA Updates", "Career Guidance", "Study Tips", "Industry Trends", "Finance"];  // Hardcoded, or fetch from backend
+  const categories = [
+    "all",
+    "CA Updates",
+    "Career Guidance",
+    "Study Tips",
+    "Industry Trends",
+    "Finance",
+  ]; // Hardcoded, or fetch from backend
 
   // Fetch articles from backend on mount
   useEffect(() => {
@@ -19,47 +36,53 @@ const BlogPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await apiClient.get('/api/articles');  // Fetches { articles: [...] }
-        const fetchedPosts = response.articles || [];  // Extract array from response
+        const response = await apiClient.get("/api/articles"); // Fetches { articles: [...] }
+        const fetchedPosts = response.articles || []; // Extract array from response
 
         // Map backend data to frontend structure
-        const mappedPosts = fetchedPosts.map(post => ({
-          id: post._id,  // Use Mongo _id as id
+        const mappedPosts = fetchedPosts.map((post) => ({
+          id: post._id, // Use Mongo _id as id
           title: post.title,
           excerpt: post.excerpt,
-          category: post.category || 'General',  // Add if backend has category field
-          author: post.author?.username || 'Unknown',  // Backend author.username → author
-          date: new Date(post.createdAt).toLocaleDateString('en-US', { 
-            year: 'numeric', month: 'short', day: 'numeric' 
-          }),  // Format backend createdAt
-          readTime: '5 min read',  // Static for now; calculate based on content length if needed
-          image: '/api/placeholder/400/250',  // Static; use post.featuredImage if added to backend
-          featured: post.published,  // Use published as featured (adjust as needed)
-          tags: post.tags || []  // Add tags field to backend schema if needed
+          category: post.category || "General", // Add if backend has category field
+          author: post.author?.username || "Unknown", // Backend author.username → author
+          date: new Date(post.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }), // Format backend createdAt
+          readTime: "5 min read", // Static for now; calculate based on content length if needed
+          image:
+            post.image ||
+            "https://via.placeholder.com/600x400.png?text=No+Image", // ← THIS IS THE KEY
+          featured: post.published, // Use published as featured (adjust as needed)
+          tags: post.tags || [], // Add tags field to backend schema if needed
         }));
 
         setBlogPosts(mappedPosts);
       } catch (err) {
-        setError('Failed to load articles. Please try again later.');
-        console.error('Fetch error:', err);
+        setError("Failed to load articles. Please try again later.");
+        console.error("Fetch error:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchArticles();
-  }, []);  // Runs once on mount
+  }, []); // Runs once on mount
 
   // Filter logic (uses fetched blogPosts)
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+  const filteredPosts = blogPosts.filter((post) => {
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const featuredPosts = filteredPosts.filter(post => post.featured);
-  const regularPosts = filteredPosts.filter(post => !post.featured);
+  const featuredPosts = filteredPosts.filter((post) => post.featured);
+  const regularPosts = filteredPosts.filter((post) => !post.featured);
 
   // Loading spinner
   if (loading) {
@@ -79,8 +102,8 @@ const BlogPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Retry
@@ -100,9 +123,10 @@ const BlogPage = () => {
             Insights & Updates
           </h2>
           <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-            Stay informed with the latest educational trends, exam updates, and career guidance to accelerate your professional journey.
+            Stay informed with the latest educational trends, exam updates, and
+            career guidance to accelerate your professional journey.
           </p>
-          
+
           {/* Stats (unchanged) */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12">
             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-blue-100">
@@ -152,20 +176,20 @@ const BlogPage = () => {
                 className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
               />
             </div>
-            
+
             {/* Categories */}
             <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
+              {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     selectedCategory === category
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
-                      : 'bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 border border-gray-200'
+                      ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
+                      : "bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 border border-gray-200"
                   }`}
                 >
-                  {category === 'all' ? 'All Categories' : category}
+                  {category === "all" ? "All Categories" : category}
                 </button>
               ))}
             </div>
@@ -177,12 +201,22 @@ const BlogPage = () => {
       {featuredPosts.length > 0 && (
         <section className="py-16 px-4">
           <div className="max-w-7xl mx-auto">
-            <h3 className="text-3xl font-bold text-blue-800 mb-8 text-center">Featured Articles</h3>
+            <h3 className="text-3xl font-bold text-blue-800 mb-8 text-center">
+              Featured Articles
+            </h3>
             <div className="grid md:grid-cols-2 gap-8">
-              {featuredPosts.map(post => (
-                <article key={post.id} className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-blue-100">
+              {featuredPosts.map((post) => (
+                <article
+                  key={post.id}
+                  className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-blue-100"
+                >
                   <div className="relative">
-                    <div className="h-64 bg-gradient-to-br from-blue-500 to-orange-400"></div>
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-64 object-cover"
+                    />
+
                     <div className="absolute top-4 left-4">
                       <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                         Featured
@@ -191,7 +225,9 @@ const BlogPage = () => {
                   </div>
                   <div className="p-8">
                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                      <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{post.category}</span>
+                      <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                        {post.category}
+                      </span>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {post.date}
@@ -204,14 +240,20 @@ const BlogPage = () => {
                     <h4 className="text-xl font-bold text-blue-800 mb-3 group-hover:text-orange-500 transition-colors">
                       {post.title}
                     </h4>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{post.excerpt}</p>
+                    <p className="text-gray-600 mb-4 leading-relaxed">
+                      {post.excerpt}
+                    </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">{post.readTime}</span>
-                      <Link href={`/blog/${post.id}`}>  // Pass ID for detail page
+                      <span className="text-sm text-gray-500">
+                        {post.readTime}
+                      </span>
+                      <Link href={`/blog/${post.id}`}>
+                        {" "}
+                        // Pass ID for detail page
                         <button className="flex items-center gap-2 text-blue-600 hover:text-orange-500 font-medium group-hover:gap-3 transition-all">
                           Read More <ArrowRight className="w-4 h-4" />
                         </button>
-                      </Link> 
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -224,20 +266,35 @@ const BlogPage = () => {
       {/* Regular Posts (fixed: removed outer Link, added inner Link with Read More button for consistency) */}
       <section className="py-16 px-4 bg-gradient-to-br from-blue-50/50 to-orange-50/50">
         <div className="max-w-7xl mx-auto">
-          <h3 className="text-3xl font-bold text-blue-800 mb-12 text-center">Latest Articles</h3>
+          <h3 className="text-3xl font-bold text-blue-800 mb-12 text-center">
+            Latest Articles
+          </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {regularPosts.map(post => (
-              <article key={post.id} className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
-                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-500"></div>
+            {regularPosts.map((post) => (
+              <article
+                key={post.id}
+                className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
+              >
+                <Image
+  src={post.image}
+  alt={post.title}
+  width={600}
+  height={400}
+  className="w-full h-48 object-cover"
+/>
                 <div className="p-6">
                   <div className="flex items-center gap-3 text-sm text-gray-500 mb-3">
-                    <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">{post.category}</span>
+                    <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
+                      {post.category}
+                    </span>
                     <span>{post.date}</span>
                   </div>
                   <h4 className="text-lg font-bold text-blue-800 mb-2 group-hover:text-orange-500 transition-colors line-clamp-2">
                     {post.title}
                   </h4>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.excerpt}</p>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {post.excerpt}
+                  </p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-xs text-gray-500">
                       <User className="w-3 h-3" />
@@ -250,7 +307,8 @@ const BlogPage = () => {
                   <div className="mt-4 pt-4 border-t border-gray-100">
                     <Link href={`/blog/${post.id}`}>
                       <button className="flex items-center gap-2 text-blue-600 hover:text-orange-500 font-medium transition-all w-full justify-center">
-                        Read More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        Read More{" "}
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </Link>
                   </div>
@@ -258,11 +316,15 @@ const BlogPage = () => {
               </article>
             ))}
           </div>
-          
+
           {filteredPosts.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-gray-400 text-xl mb-4">No articles found</div>
-              <p className="text-gray-500">Try adjusting your search or category filter.</p>
+              <div className="text-gray-400 text-xl mb-4">
+                No articles found
+              </div>
+              <p className="text-gray-500">
+                Try adjusting your search or category filter.
+              </p>
             </div>
           )}
         </div>
