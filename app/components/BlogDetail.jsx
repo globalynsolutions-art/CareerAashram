@@ -473,7 +473,7 @@ const BlogDetailPage = () => {
                             onClick={() => handleShare('copy')}
                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-blue-50 rounded-lg transition-colors text-left"
                           >
-                            <Link2 className="w-4 h-4 text-gray-600" />
+                            <Link className="w-4 h-4 text-gray-600" />
                             <span className="text-sm">Copy Link</span>
                           </button>
                         </div>
@@ -803,7 +803,7 @@ const BlogDetailPage = () => {
                   {relatedArticles.map(related => (
                     <Link 
                       key={related.id}
-                      to={`/blogDetail?id=${related.id}`}  // FIX: Link href detail with ID
+                      href={`/blogDetail?id=${related.id}`}  // FIX: Link href detail with ID
                       className="block p-4 bg-gradient-to-br from-blue-50 to-orange-50 rounded-lg hover:shadow-md transition-all group"
                     >
                       <div className="text-xs text-gray-500 mb-1">{related.category}</div>
