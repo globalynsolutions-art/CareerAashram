@@ -1,32 +1,50 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';  // ADD: To get ID from URL query param
-import { ArrowLeft, Calendar, Clock, Share2, Bookmark, Facebook, Twitter, Linkedin, Link2, ChevronRight, Tag, TrendingUp, MessageCircle, ThumbsUp, Eye, Loader2 } from 'lucide-react';
-import { apiClient } from '../services/api';  // ADD: Import your API client
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation"; // ADD: To get ID from URL query param
+import Image from "next/image";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Share2,
+  Bookmark,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Link2,
+  ChevronRight,
+  Tag,
+  TrendingUp,
+  MessageCircle,
+  ThumbsUp,
+  Eye,
+  Loader2,
+} from "lucide-react";
+import { apiClient } from "../services/api"; // ADD: Import your API client
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const BlogDetailPage = () => {
-  const [searchParams] = useSearchParams();  // ADD: Get URL params
-   const articleId = useParams().id; // Get ?id= from URL
+  const [searchParams] = useSearchParams(); // ADD: Get URL params
+  const articleId = useParams().id; // Get ?id= from URL
   const [article, setArticle] = useState(null);
   const [relatedArticles, setRelatedArticles] = useState([]);
-  const [comments, setComments] = useState([]);  // Mock comments for now; add backend endpoint later
+  const [comments, setComments] = useState([]); // Mock comments for now; add backend endpoint later
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
-  const [allArticles, setAllArticles] = useState([]);  // ADD: Fetch all for related
+  const [allArticles, setAllArticles] = useState([]); // ADD: Fetch all for related
 
   // Fetch article data
   useEffect(() => {
     if (!articleId) {
-      setError('No article ID found in URL');
+      setError("No article ID found in URL");
       setLoading(false);
       return;
     }
@@ -37,11 +55,13 @@ const BlogDetailPage = () => {
         setError(null);
 
         // Fetch single article
-        const articleResponse = await apiClient.get(`/api/articles/${articleId}`);
-        const fetchedArticle = articleResponse;  // Backend returns full article object
+        const articleResponse = await apiClient.get(
+          `/api/articles/${articleId}`
+        );
+        const fetchedArticle = articleResponse; // Backend returns full article object
 
         // Fetch all articles for related (or add /related endpoint later)
-        const allResponse = await apiClient.get('/api/articles');
+        const allResponse = await apiClient.get("/api/articles");
         const allFetched = allResponse.articles || [];
 
         // Mock comments (add /articles/:id/comments endpoint to backend later)
@@ -51,51 +71,64 @@ const BlogDetailPage = () => {
             author: "Rahul Sharma",
             avatar: "RS",
             date: "2 days ago",
-            content: "Very informative article! The exam schedule breakdown really helped me plan my preparation timeline.",
-            likes: 12
+            content:
+              "Very informative article! The exam schedule breakdown really helped me plan my preparation timeline.",
+            likes: 12,
           },
           {
             id: 2,
             author: "Priya Patel",
             avatar: "PP",
             date: "1 day ago",
-            content: "Thanks for sharing this. The registration dates are crucial information for all CA aspirants.",
-            likes: 8
-          }
+            content:
+              "Thanks for sharing this. The registration dates are crucial information for all CA aspirants.",
+            likes: 8,
+          },
         ];
 
         // Map backend data to frontend structure
         const mappedArticle = {
           ...fetchedArticle,
-          date: new Date(fetchedArticle.createdAt).toLocaleDateString('en-US', { 
-            year: 'numeric', month: 'long', day: 'numeric' 
+          date: new Date(fetchedArticle.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
           }),
-          readTime: '8 min read',  // Static; calculate from content length if needed
+          readTime: "8 min read", // Static; calculate from content length if needed
           views: fetchedArticle.views || 0,
           likes: fetchedArticle.likes || 0,
-          isLikedByUser: false,  // Fetch from user prefs or mock
-          isBookmarkedByUser: false,  // Mock
+          isLikedByUser: false, // Fetch from user prefs or mock
+          isBookmarkedByUser: false, // Mock
           author: {
-            name: fetchedArticle.author?.username || 'Unknown Author',
-            avatar: fetchedArticle.author?.username?.charAt(0).toUpperCase() || 'U',
-            bio: fetchedArticle.author?.email || 'Educational Consultant',
-            articles: 45,  // Mock; fetch from user profile
-            followers: 12000  // Mock
+            name: fetchedArticle.author?.username || "Unknown Author",
+            avatar:
+              fetchedArticle.author?.username?.charAt(0).toUpperCase() || "U",
+            bio: fetchedArticle.author?.email || "Educational Consultant",
+            articles: 45, // Mock; fetch from user profile
+            followers: 12000, // Mock
           },
-          tags: fetchedArticle.tags || ['General']  // Add tags to backend if needed
+          tags: fetchedArticle.tags || ["General"], // Add tags to backend if needed
         };
 
         // Related: Filter all by category (top 3, exclude current)
-        const category = fetchedArticle.category || 'General';
+        const category = fetchedArticle.category || "General";
         const related = allFetched
-          .filter(p => p._id !== articleId && (p.category === category || p.title.includes(fetchedArticle.title.split(' ')[0])))
+          .filter(
+            (p) =>
+              p._id !== articleId &&
+              (p.category === category ||
+                p.title.includes(fetchedArticle.title.split(" ")[0]))
+          )
           .slice(0, 3)
-          .map(p => ({
+          .map((p) => ({
             id: p._id,
             title: p.title,
-            category: p.category || 'General',
-            readTime: '5 min',
-            date: new Date(p.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            category: p.category || "General",
+            readTime: "5 min",
+            date: new Date(p.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            }),
           }));
 
         setArticle(mappedArticle);
@@ -103,25 +136,25 @@ const BlogDetailPage = () => {
         setRelatedArticles(related);
         setComments(mockComments);
         setLikes(mappedArticle.likes);
-        setIsLiked(false);  // Mock
-        setIsBookmarked(false);  // Mock
-        
+        setIsLiked(false); // Mock
+        setIsBookmarked(false); // Mock
+
         setLoading(false);
       } catch (err) {
-        console.error('API Error:', err);
-        setError('Failed to load article. Please try again later.');
+        console.error("API Error:", err);
+        setError("Failed to load article. Please try again later.");
         // Fallback to mock data
         loadMockData();
       }
     };
 
     fetchArticleData();
-  }, [articleId]);  // Re-fetch if ID changes
+  }, [articleId]); // Re-fetch if ID changes
 
   // Mock data for demo (unchanged, but only loads on error)
   const loadMockData = () => {
     setArticle({
-      id: '123',
+      id: "123",
       title: "Complete Guide to ICAI CA 2026 Exam Schedule",
       category: "CA Updates",
       author: {
@@ -129,7 +162,7 @@ const BlogDetailPage = () => {
         avatar: "RK",
         bio: "CA, Educational Consultant with 10+ years experience",
         articles: 45,
-        followers: 12000
+        followers: 12000,
       },
       date: "December 15, 2025",
       readTime: "8 min read",
@@ -171,33 +204,40 @@ const BlogDetailPage = () => {
         <h2>Conclusion</h2>
         <p>Proper planning, disciplined study habits, and timely registration are key to success in these examinations. Best wishes to all CA aspirants!</p>
       `,
-      tags: ["CA Exam", "Schedule", "ICAI", "Registration", "CA Foundation", "CA Intermediate"],
+      tags: [
+        "CA Exam",
+        "Schedule",
+        "ICAI",
+        "Registration",
+        "CA Foundation",
+        "CA Intermediate",
+      ],
       isLikedByUser: false,
-      isBookmarkedByUser: false
+      isBookmarkedByUser: false,
     });
 
     setRelatedArticles([
       {
-        id: '124',
+        id: "124",
         title: "Top 10 Study Tips for CA Aspirants",
         category: "Study Tips",
         readTime: "5 min",
-        date: "Dec 14, 2025"
+        date: "Dec 14, 2025",
       },
       {
-        id: '125',
+        id: "125",
         title: "Understanding CA Articleship Requirements",
         category: "CA Updates",
         readTime: "6 min",
-        date: "Dec 12, 2025"
+        date: "Dec 12, 2025",
       },
       {
-        id: '126',
+        id: "126",
         title: "Time Management Strategies for CA Exams",
         category: "Study Tips",
         readTime: "7 min",
-        date: "Dec 10, 2025"
-      }
+        date: "Dec 10, 2025",
+      },
     ]);
 
     setComments([
@@ -206,17 +246,19 @@ const BlogDetailPage = () => {
         author: "Rahul Sharma",
         avatar: "RS",
         date: "2 days ago",
-        content: "Very informative article! The exam schedule breakdown really helped me plan my preparation timeline.",
-        likes: 12
+        content:
+          "Very informative article! The exam schedule breakdown really helped me plan my preparation timeline.",
+        likes: 12,
       },
       {
         id: 2,
         author: "Priya Patel",
         avatar: "PP",
         date: "1 day ago",
-        content: "Thanks for sharing this. The registration dates are crucial information for all CA aspirants.",
-        likes: 8
-      }
+        content:
+          "Thanks for sharing this. The registration dates are crucial information for all CA aspirants.",
+        likes: 8,
+      },
     ]);
 
     setLikes(342);
@@ -227,16 +269,18 @@ const BlogDetailPage = () => {
   const handleLike = async () => {
     const newLikeState = !isLiked;
     const newLikesCount = newLikeState ? likes + 1 : likes - 1;
-    
+
     // Optimistic update
     setIsLiked(newLikeState);
     setLikes(newLikesCount);
 
     try {
       // Placeholder: Update backend (add /articles/:id/like endpoint)
-      await apiClient.post(`/api/articles/${articleId}/like`, { liked: newLikeState });
+      await apiClient.post(`/api/articles/${articleId}/like`, {
+        liked: newLikeState,
+      });
     } catch (err) {
-      console.error('Failed to update like:', err);
+      console.error("Failed to update like:", err);
       // Revert on error
       setIsLiked(!newLikeState);
       setLikes(newLikeState ? likes - 1 : likes + 1);
@@ -250,9 +294,11 @@ const BlogDetailPage = () => {
 
     try {
       // Placeholder: Update backend (add /articles/:id/bookmark endpoint)
-      await apiClient.post(`/api/articles/${articleId}/bookmark`, { bookmarked: newBookmarkState });
+      await apiClient.post(`/api/articles/${articleId}/bookmark`, {
+        bookmarked: newBookmarkState,
+      });
     } catch (err) {
-      console.error('Failed to update bookmark:', err);
+      console.error("Failed to update bookmark:", err);
       setIsBookmarked(!newBookmarkState);
     }
   };
@@ -263,27 +309,32 @@ const BlogDetailPage = () => {
     if (!comment.trim()) return;
 
     setSubmittingComment(true);
-    
+
     const newComment = {
       author: "You",
       avatar: "YU",
       date: "Just now",
       content: comment,
-      likes: 0
+      likes: 0,
     };
 
     // Optimistic update
     setComments([...comments, { ...newComment, id: Date.now() }]);
-    setComment('');
+    setComment("");
 
     try {
       // Placeholder: Post to backend (add /articles/:id/comments endpoint)
-      const response = await apiClient.post(`/api/articles/${articleId}/comments`, { content: comment });
-      const savedComment = response;  // Assume backend returns saved comment
+      const response = await apiClient.post(
+        `/api/articles/${articleId}/comments`,
+        { content: comment }
+      );
+      const savedComment = response; // Assume backend returns saved comment
       // Update with backend ID if needed
-      setComments(prev => prev.map(c => c.id === newComment.id ? savedComment : c));
+      setComments((prev) =>
+        prev.map((c) => (c.id === newComment.id ? savedComment : c))
+      );
     } catch (err) {
-      console.error('Failed to post comment:', err);
+      console.error("Failed to post comment:", err);
       // Keep optimistic on error for UX
     } finally {
       setSubmittingComment(false);
@@ -292,21 +343,36 @@ const BlogDetailPage = () => {
 
   const handleShare = (platform) => {
     const url = window.location.href;
-    const text = article?.title || '';
-    
-    switch(platform) {
-      case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+    const text = article?.title || "";
+
+    switch (platform) {
+      case "facebook":
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+            url
+          )}`,
+          "_blank"
+        );
         break;
-      case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+      case "twitter":
+        window.open(
+          `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+            url
+          )}&text=${encodeURIComponent(text)}`,
+          "_blank"
+        );
         break;
-      case 'linkedin':
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+      case "linkedin":
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+            url
+          )}`,
+          "_blank"
+        );
         break;
-      case 'copy':
+      case "copy":
         navigator.clipboard.writeText(url);
-        alert('Link copied to clipboard!');
+        alert("Link copied to clipboard!");
         break;
     }
     setShowShareMenu(false);
@@ -330,9 +396,11 @@ const BlogDetailPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Article</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Error Loading Article
+          </h2>
           <p className="text-gray-600 mb-6">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
           >
@@ -353,11 +421,17 @@ const BlogDetailPage = () => {
       <div className="bg-white/50 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <a href="#" className="hover:text-blue-600">Home</a>
+            <a href="#" className="hover:text-blue-600">
+              Home
+            </a>
             <ChevronRight className="w-4 h-4" />
-            <a href="#" className="hover:text-blue-600">Blog</a>
+            <a href="#" className="hover:text-blue-600">
+              Blog
+            </a>
             <ChevronRight className="w-4 h-4" />
-            <a href="#" className="hover:text-blue-600">{article.category}</a>
+            <a href="#" className="hover:text-blue-600">
+              {article.category}
+            </a>
             <ChevronRight className="w-4 h-4" />
             <span className="text-gray-400">Article</span>
           </div>
@@ -370,15 +444,54 @@ const BlogDetailPage = () => {
           <div className="lg:col-span-2">
             <article className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100">
               {/* Featured Image */}
-              <div className="h-96 bg-gradient-to-br from-blue-600 via-blue-700 to-orange-500 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-8">
-                    <span className="inline-block bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+              {/* Featured Image — REAL CLOUDINARY IMAGE */}
+              {article.image ? (
+                <div className="relative h-96 lg:h-screen max-h-96 overflow-hidden">
+                  <Image
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="100vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+                  {/* Category Badge */}
+                  <div className="absolute bottom-8 left-8">
+                    <span className="inline-block bg-orange-500 text-white px-6 py-3 rounded-full text-lg font-bold shadow-2xl">
                       {article.category}
                     </span>
                   </div>
+
+                  {/* Title Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-16 text-white">
+                    <h1 className="text-4xl lg:text-6xl font-bold leading-tight drop-shadow-2xl">
+                      {article.title}
+                    </h1>
+                    <div className="flex items-center gap-6 mt-4 text-lg opacity-90">
+                      <span className="flex items-center gap-2">
+                        <Calendar className="w-5 h-5" />
+                        {article.date}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <Clock className="w-5 h-5" />
+                        {article.readTime}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Fallback if no image */
+                <div className="h-96 bg-gradient-to-br from-blue-600 via-blue-700 to-orange-500 relative flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <span className="inline-block bg-orange-500 text-white px-6 py-3 rounded-full text-lg font-bold mb-4">
+                      {article.category}
+                    </span>
+                    <h1 className="text-5xl font-bold mt-4">{article.title}</h1>
+                  </div>
+                </div>
+              )}
 
               <div className="p-6 lg:p-12">
                 {/* Article Meta */}
@@ -413,18 +526,24 @@ const BlogDetailPage = () => {
                       {article.author.avatar}
                     </div>
                     <div>
-                      <div className="font-semibold text-blue-800">{article.author.name}</div>
-                      <div className="text-sm text-gray-600">{article.author.bio}</div>
-                      <div className="text-xs text-gray-500">{article.author.articles} Articles Published</div>
+                      <div className="font-semibold text-blue-800">
+                        {article.author.name}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {article.author.bio}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {article.author.articles} Articles Published
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={handleLike}
                       className={`p-2 rounded-full transition-all ${
-                        isLiked 
-                          ? 'bg-blue-600 text-white' 
-                          : 'bg-gray-100 text-gray-600 hover:bg-blue-50'
+                        isLiked
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-blue-50"
                       }`}
                     >
                       <ThumbsUp className="w-5 h-5" />
@@ -432,9 +551,9 @@ const BlogDetailPage = () => {
                     <button
                       onClick={handleBookmark}
                       className={`p-2 rounded-full transition-all ${
-                        isBookmarked 
-                          ? 'bg-orange-500 text-white' 
-                          : 'bg-gray-100 text-gray-600 hover:bg-orange-50'
+                        isBookmarked
+                          ? "bg-orange-500 text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-orange-50"
                       }`}
                     >
                       <Bookmark className="w-5 h-5" />
@@ -449,28 +568,28 @@ const BlogDetailPage = () => {
                       {showShareMenu && (
                         <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 w-48 z-10">
                           <button
-                            onClick={() => handleShare('facebook')}
+                            onClick={() => handleShare("facebook")}
                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-blue-50 rounded-lg transition-colors text-left"
                           >
                             <Facebook className="w-4 h-4 text-blue-600" />
                             <span className="text-sm">Facebook</span>
                           </button>
                           <button
-                            onClick={() => handleShare('twitter')}
+                            onClick={() => handleShare("twitter")}
                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-blue-50 rounded-lg transition-colors text-left"
                           >
                             <Twitter className="w-4 h-4 text-blue-400" />
                             <span className="text-sm">Twitter</span>
                           </button>
                           <button
-                            onClick={() => handleShare('linkedin')}
+                            onClick={() => handleShare("linkedin")}
                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-blue-50 rounded-lg transition-colors text-left"
                           >
                             <Linkedin className="w-4 h-4 text-blue-700" />
                             <span className="text-sm">LinkedIn</span>
                           </button>
                           <button
-                            onClick={() => handleShare('copy')}
+                            onClick={() => handleShare("copy")}
                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-blue-50 rounded-lg transition-colors text-left"
                           >
                             <Link className="w-4 h-4 text-gray-600" />
@@ -663,22 +782,34 @@ const BlogDetailPage = () => {
                         <div className="mb-2 transform group-hover:scale-110 transition-transform">
                           <ThumbsUp className="w-8 h-8 text-white mx-auto mb-2" />
                         </div>
-                        <div className="text-3xl font-bold text-white mb-1">{likes}</div>
-                        <div className="text-sm text-blue-100 font-medium">Likes</div>
+                        <div className="text-3xl font-bold text-white mb-1">
+                          {likes}
+                        </div>
+                        <div className="text-sm text-blue-100 font-medium">
+                          Likes
+                        </div>
                       </div>
                       <div className="text-center group cursor-pointer border-x-2 border-white/30">
                         <div className="mb-2 transform group-hover:scale-110 transition-transform">
                           <Eye className="w-8 h-8 text-white mx-auto mb-2" />
                         </div>
-                        <div className="text-3xl font-bold text-white mb-1">{article.views}</div>
-                        <div className="text-sm text-blue-100 font-medium">Views</div>
+                        <div className="text-3xl font-bold text-white mb-1">
+                          {article.views}
+                        </div>
+                        <div className="text-sm text-blue-100 font-medium">
+                          Views
+                        </div>
                       </div>
                       <div className="text-center group cursor-pointer">
                         <div className="mb-2 transform group-hover:scale-110 transition-transform">
                           <MessageCircle className="w-8 h-8 text-white mx-auto mb-2" />
                         </div>
-                        <div className="text-3xl font-bold text-white mb-1">{comments.length}</div>
-                        <div className="text-sm text-blue-100 font-medium">Comments</div>
+                        <div className="text-3xl font-bold text-white mb-1">
+                          {comments.length}
+                        </div>
+                        <div className="text-sm text-blue-100 font-medium">
+                          Comments
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -690,12 +821,15 @@ const BlogDetailPage = () => {
                 <div className="mt-16">
                   <div className="flex items-center gap-3 mb-8">
                     <MessageCircle className="w-7 h-7 text-blue-600" />
-                    <h3 className="text-3xl font-bold text-blue-800">Discussion</h3>
+                    <h3 className="text-3xl font-bold text-blue-800">
+                      Discussion
+                    </h3>
                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                      {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                      {comments.length}{" "}
+                      {comments.length === 1 ? "Comment" : "Comments"}
                     </span>
                   </div>
-                  
+
                   {/* Comment Input */}
                   <div className="mb-10">
                     <div className="bg-gradient-to-br from-blue-50 to-orange-50 p-6 rounded-2xl border-2 border-blue-100 shadow-lg">
@@ -712,7 +846,13 @@ const BlogDetailPage = () => {
                       <div className="flex items-center justify-between mt-4">
                         <div className="text-sm text-gray-500">
                           {comment.length > 0 && (
-                            <span className={comment.length > 500 ? 'text-orange-500' : 'text-gray-500'}>
+                            <span
+                              className={
+                                comment.length > 500
+                                  ? "text-orange-500"
+                                  : "text-gray-500"
+                              }
+                            >
                               {comment.length} / 500 characters
                             </span>
                           )}
@@ -722,8 +862,10 @@ const BlogDetailPage = () => {
                           disabled={submittingComment || !comment.trim()}
                           className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
-                          {submittingComment && <Loader2 className="w-4 h-4 animate-spin" />}
-                          {submittingComment ? 'Posting...' : 'Post Comment'}
+                          {submittingComment && (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          )}
+                          {submittingComment ? "Posting..." : "Post Comment"}
                         </button>
                       </div>
                     </div>
@@ -732,8 +874,8 @@ const BlogDetailPage = () => {
                   {/* Comments List */}
                   <div className="space-y-6">
                     {comments.map((item, idx) => (
-                      <div 
-                        key={item.id} 
+                      <div
+                        key={item.id}
                         className="flex gap-4 p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all group"
                         style={{ animationDelay: `${idx * 0.1}s` }}
                       >
@@ -742,11 +884,17 @@ const BlogDetailPage = () => {
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-3">
-                            <span className="font-bold text-blue-800 text-lg">{item.author}</span>
+                            <span className="font-bold text-blue-800 text-lg">
+                              {item.author}
+                            </span>
                             <span className="text-sm text-gray-400">•</span>
-                            <span className="text-sm text-gray-500">{item.date}</span>
+                            <span className="text-sm text-gray-500">
+                              {item.date}
+                            </span>
                           </div>
-                          <p className="text-gray-700 mb-3 leading-relaxed text-base">{item.content}</p>
+                          <p className="text-gray-700 mb-3 leading-relaxed text-base">
+                            {item.content}
+                          </p>
                           <div className="flex items-center gap-4">
                             <button className="text-sm text-gray-500 hover:text-blue-600 flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-all font-medium">
                               <ThumbsUp className="w-4 h-4" />
@@ -775,15 +923,23 @@ const BlogDetailPage = () => {
                   <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
                     {article.author.avatar}
                   </div>
-                  <h4 className="font-bold text-blue-800 text-lg mb-1">{article.author.name}</h4>
-                  <p className="text-sm text-gray-600 mb-4">{article.author.bio}</p>
+                  <h4 className="font-bold text-blue-800 text-lg mb-1">
+                    {article.author.name}
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    {article.author.bio}
+                  </p>
                   <div className="flex justify-center gap-4 mb-4">
                     <div className="text-center">
-                      <div className="font-bold text-blue-800">{article.author.articles}</div>
+                      <div className="font-bold text-blue-800">
+                        {article.author.articles}
+                      </div>
                       <div className="text-xs text-gray-600">Articles</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-blue-800">{(article.author.followers / 1000).toFixed(1)}K</div>
+                      <div className="font-bold text-blue-800">
+                        {(article.author.followers / 1000).toFixed(1)}K
+                      </div>
                       <div className="text-xs text-gray-600">Followers</div>
                     </div>
                   </div>
@@ -797,16 +953,20 @@ const BlogDetailPage = () => {
               <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="w-5 h-5 text-orange-500" />
-                  <h3 className="font-bold text-blue-800 text-lg">Related Articles</h3>
+                  <h3 className="font-bold text-blue-800 text-lg">
+                    Related Articles
+                  </h3>
                 </div>
                 <div className="space-y-4">
-                  {relatedArticles.map(related => (
-                    <Link 
+                  {relatedArticles.map((related) => (
+                    <Link
                       key={related.id}
-                      href={`/blogDetail?id=${related.id}`}  // FIX: Link href detail with ID
+                      href={`/blogDetail?id=${related.id}`} // FIX: Link href detail with ID
                       className="block p-4 bg-gradient-to-br from-blue-50 to-orange-50 rounded-lg hover:shadow-md transition-all group"
                     >
-                      <div className="text-xs text-gray-500 mb-1">{related.category}</div>
+                      <div className="text-xs text-gray-500 mb-1">
+                        {related.category}
+                      </div>
                       <h4 className="font-semibold text-blue-800 mb-2 group-hover:text-orange-500 transition-colors line-clamp-2">
                         {related.title}
                       </h4>
@@ -823,7 +983,9 @@ const BlogDetailPage = () => {
               {/* Newsletter Signup */}
               <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
                 <h3 className="font-bold text-xl mb-2">Stay Updated</h3>
-                <p className="text-blue-100 text-sm mb-4">Get latest articles delivered to your inbox</p>
+                <p className="text-blue-100 text-sm mb-4">
+                  Get latest articles delivered to your inbox
+                </p>
                 <input
                   type="email"
                   placeholder="Your email"
@@ -843,23 +1005,69 @@ const BlogDetailPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h4 className="text-xl font-bold mb-4 text-orange-400">Career Aashram</h4>
-              <p className="text-blue-200 text-sm">Empowering students with quality education.</p>
+              <h4 className="text-xl font-bold mb-4 text-orange-400">
+                Career Aashram
+              </h4>
+              <p className="text-blue-200 text-sm">
+                Empowering students with quality education.
+              </p>
             </div>
             <div>
               <h5 className="font-semibold mb-4">Quick Links</h5>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-blue-200 hover:text-orange-400 transition-colors">About Us</a></li>
-                <li><a href="#" className="text-blue-200 hover:text-orange-400 transition-colors">Courses</a></li>
-                <li><a href="#" className="text-blue-200 hover:text-orange-400 transition-colors">Contact</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-blue-200 hover:text-orange-400 transition-colors"
+                  >
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-blue-200 hover:text-orange-400 transition-colors"
+                  >
+                    Courses
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-blue-200 hover:text-orange-400 transition-colors"
+                  >
+                    Contact
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h5 className="font-semibold mb-4">Categories</h5>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-blue-200 hover:text-orange-400 transition-colors">CA Updates</a></li>
-                <li><a href="#" className="text-blue-200 hover:text-orange-400 transition-colors">Career Guidance</a></li>
-                <li><a href="#" className="text-blue-200 hover:text-orange-400 transition-colors">Study Tips</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-blue-200 hover:text-orange-400 transition-colors"
+                  >
+                    CA Updates
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-blue-200 hover:text-orange-400 transition-colors"
+                  >
+                    Career Guidance
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-blue-200 hover:text-orange-400 transition-colors"
+                  >
+                    Study Tips
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
