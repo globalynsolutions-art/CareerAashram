@@ -18,7 +18,11 @@ export const metadata ={
   title :"Career Aashram | Online Career Guidance & Counseling for Students in India",
   description: "career guidance, career counseling, online counseling India, student career advice, best career options, college admission guidance, career test India, career planning, courses after 12th, top colleges India, online career guidance platform, study in India",
    keywords: "career guidance, career counseling, online counseling India, student career advice, best career options, college admission guidance, career test India, career planning, courses after 12th, top colleges India, online career guidance platform, study in India"  ,   
-  classification: "Career Guidance, Education, Counseling"
+  classification: "Career Guidance, Education, Counseling",
+  alternates: {
+    canonical: "https://careeraashram.org/",
+  },
+
 }
 
 export default function RootLayout({ children }) {
