@@ -95,9 +95,9 @@ const CourseCard = ({
         {/* Exams */}
         <div className="flex flex-wrap gap-2 mb-6 min-h-[60px] md:min-h-[80px]">
           {exams.map((exam, index) => (
-            <Link href={`/examDetail/${exam.toLowerCase().replace(/\s+/g, '-')}`}>
+            <Link  key={exam} href={`/examDetail/${exam.toLowerCase().replace(/\s+/g, '-')}`}>
                 <span
-              key={index}
+             
               className="px-3 py-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-xl text-xs md:text-sm border border-blue-200 hover:from-blue-100 hover:to-blue-200 hover:scale-105 transition-all duration-200 font-medium cursor-pointer"
             >
               {exam}
@@ -337,7 +337,7 @@ const CourseFinder = () => {
            
         
             <CourseCard
-              key={index}
+              key={course.id}
               icon={course.icon}
               title={course.title}
               subtitle={course.subtitle}

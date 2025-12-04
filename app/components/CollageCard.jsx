@@ -225,26 +225,14 @@ const CollegeSection = () => {
         {/* Enhanced College Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {filteredColleges.map((college) => (
-            <div key={college.id} className="w-full">
+            <div key={college.id} className="w-full animate-fade-in-up">
               <CollegeCard college={college} />
             </div>
           ))}
         </div>
       </div>
 
-      {/* CSS for Animation */}
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+    
     </div>
   );
 };

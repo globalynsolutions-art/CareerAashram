@@ -15,6 +15,11 @@ import woxsen from "../assets/img/woxsen.jpg";
 function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
+     {
+      image: snu,
+      text: 'Discover Top Universities',
+      alt: 'SNU Campus 2'
+    },
      
     {
       image: srm,
@@ -65,11 +70,7 @@ function Carousel() {
       alt: 'SNU Campus 2'
     },
 
-    {
-      image: snu,
-      text: 'Discover Top Universities',
-      alt: 'SNU Campus 2'
-    },
+   
     {
       image: woxsen,
       text: 'Discover Top Universities',
@@ -98,7 +99,7 @@ function Carousel() {
                 alt={slide.alt}
                 fill
                 priority={index === 0}
-                className="object-fill"
+                className="object-cover"
               />
 
             <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent"></div>

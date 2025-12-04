@@ -1040,7 +1040,7 @@ function Navbar() {
             {isLoggedIn ? (
               <div className="relative group">
                 <Link
-                  to="/userprofile"
+                  href="/userprofile"
                   className="text-blue-100 hover:text-orange-400 transition-colors duration-200"
                 >
                   <svg
@@ -1059,7 +1059,7 @@ function Navbar() {
                 {/* Optional: Add a dropdown menu for logout */}
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
-                    to="/userprofile"
+                    href="/userprofile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Profile
@@ -1223,7 +1223,7 @@ function Navbar() {
               </Link>
               <div className="border-t border-blue-700 pt-3 mt-2 md:hidden">
                 <Link
-                  to="/write-review"
+                  href="/write-review"
                   className="text-blue-100 hover:text-orange-400 flex items-center transition-colors duration-200 py-2 px-2 rounded hover:bg-blue-700/30"
                 >
                   <svg
